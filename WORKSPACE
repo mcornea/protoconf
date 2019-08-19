@@ -231,3 +231,207 @@ load(
 )
 
 _go_image_repos()
+
+load("//libprotoconf:deps.bzl", libprotoconf_deps = "deps")
+
+libprotoconf_deps()
+
+# No more `go_repository` behind this line, please move to appropriate deps.bzl file
+
+go_repository(
+    name = "com_github_mgutz_logxi",
+    commit = "aebf8a7d67ab4625e0fd4a665766fef9a709161b",
+    importpath = "github.com/mgutz/logxi",
+)
+
+go_repository(
+    name = "com_github_hashicorp_go_uuid",
+    commit = "4f571afc59f3043a65f8fe6bf46d887b10a01d43",
+    importpath = "github.com/hashicorp/go-uuid",
+)
+
+go_repository(
+    name = "com_github_mattn_go_colorable",
+    commit = "388941e3ea99c461d2bc2747eaf27741b6dda096",
+    importpath = "github.com/mattn/go-colorable",
+)
+
+go_repository(
+    name = "com_github_mgutz_ansi",
+    commit = "9520e82c474b0a04dd04f8a40959027271bab992",
+    importpath = "github.com/mgutz/ansi",
+)
+
+go_repository(
+    name = "org_golang_x_time",
+    commit = "9d24e82272b4f38b78bc8cff74fa936d31ccd8ef",
+    importpath = "golang.org/x/time",
+)
+
+go_repository(
+    name = "com_github_hashicorp_go_rootcerts",
+    commit = "df8e78a645e18d56ed7bb9ae10ffb8174ab892e2",
+    importpath = "github.com/hashicorp/go-rootcerts",
+)
+
+go_repository(
+    name = "in_gopkg_square_go_jose_v2",
+    commit = "730df5f748271903322feb182be83b43ebbbe27d",
+    importpath = "gopkg.in/square/go-jose.v2",
+)
+
+go_repository(
+    name = "com_github_hashicorp_go_retryablehttp",
+    commit = "6bb8533de58c768084f72589fcbb385719bc9dc5",
+    importpath = "github.com/hashicorp/go-retryablehttp",
+)
+
+go_repository(
+    name = "com_github_hashicorp_hcl",
+    commit = "cf7d376da96d9cecec7c7483cec2735efe54a410",
+    importpath = "github.com/hashicorp/hcl",
+)
+
+go_repository(
+    name = "com_github_hashicorp_go_cleanhttp",
+    commit = "d3fcbee8e1810ecee4bdbf415f42f84cfd0e3361",
+    importpath = "github.com/hashicorp/go-cleanhttp",
+)
+
+go_repository(
+    name = "com_github_mitchellh_mapstructure",
+    commit = "3536a929edddb9a5b34bd6861dc4a9647cb459fe",
+    importpath = "github.com/mitchellh/mapstructure",
+)
+
+go_repository(
+    name = "com_github_hashicorp_go_hclog",
+    commit = "f1d61ad5398ffe4f2eb61eacb088340d44e99672",
+    importpath = "github.com/hashicorp/go-hclog",
+)
+
+go_repository(
+    name = "com_github_elazarl_go_bindata_assetfs",
+    commit = "38087fe4dafb822e541b3f7955075cc1c30bd294",
+    importpath = "github.com/elazarl/go-bindata-assetfs",
+)
+
+go_repository(
+    name = "com_github_jefferai_jsonx",
+    commit = "a29fe22bc88c13040654d8381139d2433a5b76b6",
+    importpath = "github.com/jefferai/jsonx",
+)
+
+go_repository(
+    name = "com_github_mitchellh_go_testing_interface",
+    commit = "6d0b8010fcc857872e42fc6c931227569016843c",
+    importpath = "github.com/mitchellh/go-testing-interface",
+)
+
+go_repository(
+    name = "com_github_mitchellh_copystructure",
+    commit = "9a1b6f44e8da0e0e374624fb0a825a231b00c537",
+    importpath = "github.com/mitchellh/copystructure",
+)
+
+go_repository(
+    name = "com_github_nytimes_gziphandler",
+    commit = "dd0439581c7657cb652dfe5c71d7d48baf39541d",
+    importpath = "github.com/nytimes/gziphandler",
+)
+
+go_repository(
+    name = "com_github_hashicorp_go_sockaddr",
+    commit = "c7188e74f6acae5a989bdc959aa779f8b9f42faf",
+    importpath = "github.com/hashicorp/go-sockaddr",
+)
+
+go_repository(
+    name = "com_github_mitchellh_reflectwalk",
+    commit = "3e2c75dfad4fbf904b58782a80fd595c760ad185",
+    importpath = "github.com/mitchellh/reflectwalk",
+)
+
+go_repository(
+    name = "com_github_keybase_go_crypto",
+    commit = "b785b22cc75714432d7ebf0b554dfafaff608671",
+    importpath = "github.com/keybase/go-crypto",
+)
+
+go_repository(
+    name = "org_golang_x_crypto",
+    commit = "4def268fd1a49955bfb3dda92fe3db4f924f2285",
+    importpath = "golang.org/x/crypto",
+)
+
+go_repository(
+    name = "com_github_patrickmn_go_cache",
+    commit = "5633e0862627c011927fa39556acae8b1f1df58a",
+    importpath = "github.com/patrickmn/go-cache",
+)
+
+go_repository(
+    name = "com_github_armon_go_metrics",
+    commit = "ec5e00d3c878b2a97bbe0884ef45ffd1b4f669f5",
+    importpath = "github.com/armon/go-metrics",
+)
+
+go_repository(
+    name = "com_github_hashicorp_golang_lru",
+    commit = "7f827b33c0f158ec5dfbba01bb0b14a4541fd81d",
+    importpath = "github.com/hashicorp/golang-lru",
+)
+
+go_repository(
+    name = "com_github_oklog_run",
+    commit = "6934b124db28979da51d3470dadfa34d73d72652",
+    importpath = "github.com/oklog/run",
+)
+
+go_repository(
+    name = "com_github_hashicorp_go_memdb",
+    commit = "5500ca0de0dab231b02aedabac095d43a59f31d2",
+    importpath = "github.com/hashicorp/go-memdb",
+)
+
+go_repository(
+    name = "com_github_ryanuber_go_glob",
+    commit = "51a8f68e6c24dc43f1e371749c89a267de4ebc53",
+    importpath = "github.com/ryanuber/go-glob",
+)
+
+go_repository(
+    name = "com_github_hashicorp_go_immutable_radix",
+    commit = "0146a9aba1948ded4ed290cfd3fded2c15313f63",
+    importpath = "github.com/hashicorp/go-immutable-radix",
+)
+
+go_repository(
+    name = "com_github_pierrec_lz4",
+    commit = "a54ef8c8617bd3d46bed8dd6c0d5547f06093d30",
+    importpath = "github.com/pierrec/lz4",
+)
+
+go_repository(
+    name = "com_github_golang_snappy",
+    commit = "2a8bb927dd31d8daada140a5d09578521ce5c36a",
+    importpath = "github.com/golang/snappy",
+)
+
+go_repository(
+    name = "com_github_jeffail_gabs",
+    commit = "829ed3fc9fc24d2f0bbf7af14b40c8a399196bd1",
+    importpath = "github.com/jeffail/gabs/v2",
+)
+
+go_repository(
+    name = "com_github_hashicorp_go_plugin",
+    commit = "9e3e1c37db188a1acb66561ee0ed4bf4d5e77554",
+    importpath = "github.com/hashicorp/go-plugin",
+)
+
+go_repository(
+    name = "com_github_hashicorp_go_version",
+    commit = "192140e6f3e645d971b134d4e35b5191adb9dfd3",
+    importpath = "github.com/hashicorp/go-version",
+)

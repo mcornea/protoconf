@@ -8,6 +8,7 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/ptypes/any"
+	vault "github.com/hashicorp/vault/api"
 	protoconfvalue "protoconf.com/datatypes/proto/v1/protoconfvalue"
 	"protoconf.com/protostdlib/secret"
 	"protoconf.com/utils"
@@ -75,9 +76,33 @@ func armSecret(unarmedSecret *secret.Secret) (*secret.Secret, error) {
 		return &secret.Secret{
 			Secret: &secret.Secret_Value{Value: strings.Repeat(t.CharSecret.GetChar(), int(t.CharSecret.GetLength()))},
 		}, nil
+	case *secret.Secret_VaultSecret:
+		return getVaultSecret(unarmedSecret.GetVaultSecret())
 	case nil:
 		return nil, errors.New("Secret.secret was not set")
 	default:
 		return nil, fmt.Errorf("Secret.secret has unknown type=%T", t)
 	}
+}
+
+func getVaultSecret(vault_secret *secret.VaultSecret) (*secret.Secret, error) {
+	client, err := vault.NewClient(vault.DefaultConfig())
+	if err != nil {
+		return nil, err
+	}
+
+	secret_, err := client.Logical().Read(vault_secret.GetPath())
+	if err != nil {
+		return nil, err
+	}
+
+	value, ok := secret_.Data[vault_secret.GetKey()]
+	if !ok {
+		return nil, fmt.Errorf("Could not find vault secret path: %s, key: %s", vault_secret.GetPath(), vault_secret.GetKey())
+	}
+
+	s := &secret.Secret{
+		Secret: &secret.Secret_Value{Value: string(value.(string))},
+	}
+	return s, nil
 }

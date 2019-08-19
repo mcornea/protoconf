@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "libprotoconf",
@@ -12,14 +12,22 @@ go_library(
     deps = [
         "//consts",
         "//datatypes/proto/v1:protoconf_value_go_proto",
-        "//proto_std_lib:secret_go_proto",
         "//utils",
+        "//proto_std_lib:secret_go_proto",
         "@com_github_docker_libkv//:go_default_library",
         "@com_github_docker_libkv//store:go_default_library",
         "@com_github_docker_libkv//store/consul:go_default_library",
         "@com_github_docker_libkv//store/zookeeper:go_default_library",
         "@com_github_fsnotify_fsnotify//:go_default_library",
         "@com_github_golang_protobuf//proto:go_default_library",
-        "@com_github_golang_protobuf//ptypes/any:go_default_library",
+        "@com_github_hashicorp_vault//api:go_default_library",
+        "@io_bazel_rules_go//proto/wkt:any_go_proto",
     ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["libprotoconf_test.go"],
+    embed = [":libprotoconf"],
+    deps = ["//tests/vaultmock:go_default_library"],
 )
