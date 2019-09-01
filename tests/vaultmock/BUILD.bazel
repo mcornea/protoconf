@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["vaultmock.go"],
+    importpath = "protoconf.com/tests/vaultmock",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@com_github_hashicorp_go_hclog//:go_default_library",
+        "@com_github_hashicorp_go_uuid//:go_default_library",
+        "@com_github_hashicorp_vault//api:go_default_library",
+        "@com_github_hashicorp_vault//audit:go_default_library",
+        "@com_github_hashicorp_vault//builtin/credential/app-id:go_default_library",
+        "@com_github_hashicorp_vault//http:go_default_library",
+        "@com_github_hashicorp_vault//sdk/helper/salt:go_default_library",
+        "@com_github_hashicorp_vault//sdk/logical:go_default_library",
+        "@com_github_hashicorp_vault//sdk/physical/inmem:go_default_library",
+        "@com_github_hashicorp_vault//vault:go_default_library",
+    ],
+)

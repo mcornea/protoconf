@@ -5,7 +5,8 @@ def deps():
         name = "com_github_hashicorp_vault",
         tag = "v1.2.2",
         importpath = "github.com/hashicorp/vault",
-        # build_extra_args = ["-exclude=vendor"],
+        build_file_proto_mode = "disable",
+        build_extra_args = ["-exclude=vendor"],
     )
 
     go_repository(

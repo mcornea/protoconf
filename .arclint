@@ -13,8 +13,7 @@
       "include": [
         "((^|/)BUILD$)",
         "(\\.bzl$)",
-        "(\\.bazel$)",
-        "((^|/)WORKSPACE$)"
+        "(\\.bazel$)"
       ]
     }
   }
