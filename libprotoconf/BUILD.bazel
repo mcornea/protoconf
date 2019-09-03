@@ -2,18 +2,25 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "libprotoconf",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)
+
+go_library(
+    name = "go_default_library",
     srcs = [
         "file_watcher.go",
         "kv_watcher.go",
         "libprotoconf.go",
+        "test_watcher.go",
     ],
     importpath = "protoconf.com/libprotoconf",
     visibility = ["//visibility:public"],
     deps = [
         "//consts",
         "//datatypes/proto/v1:protoconf_value_go_proto",
-        "//utils",
         "//proto_std_lib:secret_go_proto",
+        "//utils",
         "@com_github_docker_libkv//:go_default_library",
         "@com_github_docker_libkv//store:go_default_library",
         "@com_github_docker_libkv//store/consul:go_default_library",
@@ -28,6 +35,13 @@ go_library(
 go_test(
     name = "go_default_test",
     srcs = ["libprotoconf_test.go"],
-    embed = [":libprotoconf"],
-    deps = ["//tests/vaultmock:go_default_library"],
+    embed = [":go_default_library"],
+    deps = [
+        "//datatypes/proto/v1:protoconf_value_go_proto",
+        "//examples:crawler_go_proto",
+        "//tests/vaultmock:go_default_library",
+        "@com_github_golang_protobuf//ptypes:go_default_library_gen",
+        "@com_github_hashicorp_vault//api:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
 )
