@@ -21,12 +21,23 @@ jobs:
         ports:
           - 2379
     steps:
+    - uses: actions/checkout@v1
+    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        version: '270.0.0'
+        service_account_email: ${{ secrets.GCP_SA_EMAIL }}
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+    - run: gcloud info
+
+    - name: Set Credentials
+      run: |
+        echo "${{ secrets.GCP_SA_KEY }}" | base64 -d > key.json
     - uses: actions/checkout@master
     - name: build all
       uses: ngalaiko/bazel-action/1.2.1@master
       with:
-        args: build //...
+        args: build --google_credentials=key.json  --remote_http_cache=https://storage.googleapis.com/protoconf-bazel-cache //...
     - name: test all
       uses: ngalaiko/bazel-action/1.2.1@master
       with:
-        args: test //...
+        args: test --google_credentials=key.json  --remote_http_cache=https://storage.googleapis.com/protoconf-bazel-cache //...
