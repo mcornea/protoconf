@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["generate.go"],
+    importpath = "github.com/protoconf/protoconf/generate",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@com_github_jhump_protoreflect//desc/builder:go_default_library",
+        "@com_github_jhump_protoreflect//desc/protoprint:go_default_library",
+        "@org_golang_x_tools//go/packages:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["generate_test.go"],
+    embed = [":go_default_library"],
+    deps = ["@com_github_stretchr_testify//assert:go_default_library"],
+)
