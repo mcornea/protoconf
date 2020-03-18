@@ -3,11 +3,13 @@ module github.com/protoconf/protoconf
 go 1.13
 
 require (
+	github.com/bazelbuild/buildtools v0.0.0-20200228172928-c9d9e342afdb
 	github.com/census-instrumentation/opencensus-proto v0.2.1 // indirect
 	github.com/coreos/etcd v3.3.18+incompatible // indirect
 	github.com/docker/libkv v0.2.1 // indirect
 	github.com/envoyproxy/protoc-gen-validate v0.1.0 // indirect
 	github.com/etcd-io/etcd v3.3.18+incompatible // indirect
+	github.com/fatih/structtag v1.2.0
 	github.com/fsnotify/fsnotify v1.4.7
 	github.com/golang/protobuf v1.3.2
 	github.com/hashicorp/consul v1.6.2 // indirect
@@ -25,7 +27,8 @@ require (
 	go.etcd.io/etcd v3.3.18+incompatible
 	go.starlark.net v0.0.0-20191218235703-9fcb808a6221
 	golang.org/x/net v0.0.0-20191209160850-c0dbc17a3553
-	google.golang.org/genproto v0.0.0-20191223191004-3caeed10a8bf // indirect
+	golang.org/x/tools v0.0.0-20190628153133-6cdbf07be9d0
+	google.golang.org/genproto v0.0.0-20191223191004-3caeed10a8bf
 	google.golang.org/grpc v1.23.0
 	sigs.k8s.io/yaml v1.1.0 // indirect
 )

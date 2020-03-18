@@ -10,6 +10,7 @@ import (
 
 	"github.com/fatih/structtag"
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
+	"github.com/jhump/protoreflect/desc"
 	"github.com/jhump/protoreflect/desc/builder"
 	"github.com/jhump/protoreflect/desc/protoprint"
 	"golang.org/x/tools/go/packages"
@@ -24,18 +25,44 @@ type PackageImporter struct {
 	errors             []error
 }
 
+var wkt = make(map[string]*builder.FileBuilder)
+
+func init() {
+	durationFile, err := desc.LoadFileDescriptor("google/protobuf/duration.proto")
+	if err != nil {
+		log.Fatal(err)
+	}
+	durationBuilder, err := builder.FromFile(durationFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	wkt["duration"] = durationBuilder
+
+	structFile, err := desc.LoadFileDescriptor("google/protobuf/struct.proto")
+	if err != nil {
+		log.Fatal(err)
+	}
+	structBuilder, err := builder.FromFile(structFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	wkt["struct"] = structBuilder
+}
+
 // NewPackageImporter creates a new PackageImporter
-func NewPackageImporter(pkg, rootMsg, goSrcPath string) (*PackageImporter, error) {
+func NewPackageImporter(pkg, rootMsg, goSrcPath string, env ...string) (*PackageImporter, error) {
 	fset := token.NewFileSet()
 	cfg := &packages.Config{
 		Dir:  goSrcPath,
 		Mode: packages.LoadSyntax,
 		Fset: fset,
+		Env: env,
 	}
 	packages, err := packages.Load(cfg, filepath.Join(goSrcPath, pkg))
 	if err != nil {
 		return nil, err
 	}
+	log.Println(packages)
 	return &PackageImporter{
 		pkgID:              pkg,
 		pkgs:               packages,
@@ -52,6 +79,10 @@ func goFieldTypeToProtoFieldType(x string) *builder.FieldType {
 		return builder.FieldTypeBool()
 	case "byte":
 		return builder.FieldTypeBytes()
+	case "float":
+		return builder.FieldTypeFloat()
+	case "float64":
+		return builder.FieldTypeFloat()
 	case "int":
 		return builder.FieldTypeInt32()
 	case "int8":
@@ -62,16 +93,24 @@ func goFieldTypeToProtoFieldType(x string) *builder.FieldType {
 		return builder.FieldTypeInt64()
 	case "uint":
 		return builder.FieldTypeUInt32()
+	case "uint8":
+		return builder.FieldTypeUInt32()
+	case "uint16":
+		return builder.FieldTypeUInt32()
 	case "uint32":
 		return builder.FieldTypeUInt32()
 	case "uint64":
 		return builder.FieldTypeUInt64()
 	case "string":
 		return builder.FieldTypeString()
+	case "time.Duration":
+		return builder.FieldTypeMessage(wkt["duration"].GetMessage("Duration"))
+	case "interface{}":
+		return builder.FieldTypeMessage(wkt["struct"].GetMessage("Value"))
 	case "error":
 		return nil
 	}
-	return nil
+	return builder.FieldTypeMessage(wkt["struct"].GetMessage("Value"))
 }
 
 func (p *PackageImporter) goFieldToProtoField(f *types.Var, tagstr string) *builder.FieldBuilder {
@@ -82,15 +121,30 @@ func (p *PackageImporter) goFieldToProtoField(f *types.Var, tagstr string) *buil
 	if tag, err := structtag.Parse(tagstr); err == nil {
 		if y, e := tag.Get("yaml"); e == nil {
 			b.SetJsonName(y.Name)
+			if y.Name != "" {
+				b.SetName(y.Name)
+			}
 		}
 		if j, e := tag.Get("json"); e == nil {
+			// b.SetName(j.Name)
 			b.SetJsonName(j.Name)
 		}
 	}
 	if strings.HasPrefix(f.Type().String(), "func") {
 		return nil
 	}
-	t := goFieldTypeToProtoFieldType(t1.String())
+	t := goFieldTypeToProtoFieldType(t1.Underlying().String())
+
+	// When a type is map
+	if s, ok := t1.Underlying().(*types.Map); ok {
+		t1 = s.Elem()
+		key := goFieldTypeToProtoFieldType(s.Key().Underlying().String())
+		val := goFieldTypeToProtoFieldType(s.Elem().Underlying().String())
+		if key != nil && val != nil {
+			b = builder.NewMapField(f.Name(), key, val)
+		}
+		log.Println(pkg.Name(), f.Name(), "detected as map of", t1.String())
+	}
 
 	// When a type is an Slice
 	if s, ok := t1.Underlying().(*types.Slice); ok {
@@ -130,12 +184,15 @@ func (p *PackageImporter) goFieldToProtoField(f *types.Var, tagstr string) *buil
 		log.Println(pkg.Name(), f.Name(), "detected as struct of", t1.String())
 	}
 
+	if b.IsMap() {
+		return b
+	}
 	if t != nil {
 		log.Println(pkg.Name(), f.Name(), "detected as", t1.String())
 		b.SetType(t)
 		return b
 	}
-	p.errors = append(p.errors, fmt.Errorf("could not understand field for %v %v", f.Name(), f.Type()))
+	p.errors = append(p.errors, fmt.Errorf("could not understand field for %v %v, underlying: %v", f.Name(), f.Type(), t1.Underlying()))
 	return nil
 }
 
